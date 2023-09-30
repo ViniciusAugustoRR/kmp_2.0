@@ -19,7 +19,7 @@ class ItemFragment : Fragment() {
 
     private var columnCount = 1
 
-    public var DummyTracks: ArrayList<track> =
+    var DummyTracks: ArrayList<track> =
          arrayListOf(
             track(trackName = "nome 1", albumName = "album 1", artistName = "artista 1", mDirect = "kek"),
             track(trackName = "nome 2", albumName = "album 1", artistName = "artista 1", mDirect = "kek"),
