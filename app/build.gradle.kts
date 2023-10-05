@@ -6,7 +6,6 @@ plugins {
 android {
     namespace = "com.example.mp3"
     compileSdk = 34
-
     defaultConfig {
         applicationId = "com.example.mp3"
         minSdk = 24
@@ -45,6 +44,8 @@ dependencies {
     implementation("androidx.compose.foundation:foundation-android:1.5.2")
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.3")
     implementation("androidx.navigation:navigation-ui-ktx:2.7.3")
+
+    implementation("com.sothree.slidinguppanel:library:3.4.0")
 
     implementation("com.github.bumptech.glide:glide:4.16.0")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")

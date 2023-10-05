@@ -1,11 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.sothree.slidinguppanel.SlidingUpPanelLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.activities.MainActivity">
+    android:gravity="bottom"
+    app:umanoPanelHeight="68dp"
+    app:umanoShadowHeight="4dp"
+    tools:context=".view.activities.MainActivity"
 
+    android:id="@+id/main_sliderlayout"
+
+    app:umanoDragView="@id/main_dragger"
+    app:umanoScrollableView="@id/main_scrolled">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+                <FrameLayout
+                    android:id="@+id/main_frame"
+
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/main_dragger"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:background="@color/black"
+                    >
+                        <ImageView
+                            android:id="@+id/main_runningCover"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+
+                            android:src="@mipmap/ic_launcher"
+                            android:layout_marginStart="15dp"
+
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            />
+                        <TextView
+                            android:id="@+id/main_runningTitle"
+                            android:layout_width="200dp"
+                            android:layout_height="wrap_content"
+
+                            android:maxLines="1"
+                            android:minLines="1"
+
+                            android:text="@string/placeholder_short"
+                            android:textColor="@android:color/white"
+                            android:layout_marginStart="20dp"
+
+                            app:layout_constraintStart_toEndOf="@id/main_runningCover"
+                            app:layout_constraintTop_toTopOf="@id/main_runningCover"
+                            />
+                        <TextView
+                            android:id="@+id/main_runningAlbum"
+                            android:layout_width="150dp"
+                            android:layout_height="wrap_content"
+
+                            android:maxLines="1"
+                            android:minLines="1"
+
+                            android:text="@string/placeholder_long"
+                            android:textColor="@color/white"
+                            android:textSize="12sp"
+
+                            app:layout_constraintStart_toStartOf="@id/main_runningTitle"
+                            app:layout_constraintTop_toBottomOf="@id/main_runningTitle"
+                            />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/main_scrolled"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clickable="true"
+                    android:focusable="true"
+                    >
+
+                        <FrameLayout
+                            android:id="@+id/main_runningFrame"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!--
         <FrameLayout
         android:id="@+id/main_frame"
         android:layout_width="match_parent"
@@ -14,5 +112,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
+-->
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>

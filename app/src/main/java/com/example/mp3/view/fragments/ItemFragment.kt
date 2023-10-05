@@ -40,10 +40,10 @@ class ItemFragment(private val frag_Interation : OnClickInteraction? = null): Fr
         val customAdapter = TrackAdapter(DummyTracks,
             TrackAdapter.OnClickListener { track ->
                 Toast.makeText(context, "${track.trackName}", Toast.LENGTH_SHORT).show()
-                requireActivity().supportFragmentManager
+                /*requireActivity().supportFragmentManager
                     .beginTransaction()
                     .add(R.id.main_frame, RunningPlayerFragment())
-                    .commit()
+                    .commit()*/
 
             })
 
