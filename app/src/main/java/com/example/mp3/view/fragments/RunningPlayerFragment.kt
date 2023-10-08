@@ -14,6 +14,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
+import androidx.compose.runtime.snapshots.Snapshot.Companion.observe
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -23,6 +24,7 @@ import com.example.mp3.data.repository.MPlayer._Pause
 import com.example.mp3.data.repository.MPlayer._Play
 import com.example.mp3.databinding.FragmentRunningPlayerBinding
 import com.example.mp3.logic.viewmodels.PlayerVM
+import com.example.mp3.logic.viewmodels.TestingVM
 import com.google.android.material.slider.Slider
 
 
@@ -30,6 +32,7 @@ class RunningPlayerFragment : Fragment() {
     private lateinit var binding : FragmentRunningPlayerBinding
     private val mmr = MediaMetadataRetriever()
     lateinit var playerVM: PlayerVM
+    lateinit var testVM: TestingVM
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,9 +43,8 @@ class RunningPlayerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         try {
 
-            playerVM = ViewModelProvider(requireActivity()).get(PlayerVM::class.java)
-
-            playerVM._Track.observe(requireActivity(), Observer {
+            playerVM = ViewModelProvider(requireActivity())[PlayerVM::class.java]
+            playerVM._Track.observe(viewLifecycleOwner) {
                 killMP()
                 createMP()
 
@@ -53,8 +55,7 @@ class RunningPlayerFragment : Fragment() {
                     _Play()
                     _Pause()
                 } else _Play()
-            })
-            setAssets()
+            }
 
             playerVM._progressBar.observe(viewLifecycleOwner) { music_prog ->
                 binding.runningSlider.progress = music_prog
@@ -73,6 +74,7 @@ class RunningPlayerFragment : Fragment() {
         } catch (e: Exception){
             var x = e.message
         }
+
     }
 
     override fun onCreateView(
@@ -111,11 +113,11 @@ class RunningPlayerFragment : Fragment() {
 
     private fun _Pause(){
         playerVM._Pause()
-        binding.runningPlayPause.setImageResource(R.drawable.baseline_play_arrow_24)
+        binding.runningPlayPause.setBackgroundResource(R.drawable.baseline_play_arrow_24)
     }
     private fun _Play(){
         playerVM._Play()
-        binding.runningPlayPause.setImageResource(R.drawable.baseline_pause_24)
+        binding.runningPlayPause.setBackgroundResource(R.drawable.baseline_pause_24)
     }
     private fun _PlayPause(){
         if (playerVM.getMP().value!!.isPlaying) {

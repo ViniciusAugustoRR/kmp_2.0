@@ -25,7 +25,6 @@ class PlayerVM : ViewModel() {
 
     fun setMP(newMp : MediaPlayer){
         MPlayer.setMP(newMp)
-
     }
     fun setRL(newRL : ArrayList<TrackModel>){
         if(newRL != _mReprodList.value!!) {
@@ -43,13 +42,14 @@ class PlayerVM : ViewModel() {
     var isPlaying = MutableLiveData(false)
     var isDefaultTrack = MutableLiveData(true)
     var _Track: LiveData<TrackModel> =
-        _mPosition.switchMap {
-            MutableLiveData(_mReprodList.value!![_mPosition.value!!])
+        _mPosition.switchMap {position ->
+            MutableLiveData(_mReprodList.value!![position])
         }
 
     var _tempoTotal = MutableLiveData("00:00")
     var _tempoDecor = MutableLiveData( "0:00")
     var _progressBar = MutableLiveData(0)
+
 
     fun setTempoTotal(){
         _tempoTotal.value = setTimeLabel(MPlayer.getMP().value!!.duration)
