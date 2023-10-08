@@ -13,24 +13,23 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.example.mp3.R
-import com.example.mp3.data.models.track
+import com.example.mp3.data.models.TrackModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 
 class TrackAdapter(
-    private val trackList: ArrayList<track>,
     private val onClickListener: OnClickListener
 ) : RecyclerView.Adapter<TrackAdapter.TrackViewHolder>(){
 
 
-    companion object DIFF_CALLBACK : DiffUtil.ItemCallback<track>() {
-        override fun areItemsTheSame(oldItem: track, newItem: track): Boolean {
+    companion object DIFF_CALLBACK : DiffUtil.ItemCallback<TrackModel>() {
+        override fun areItemsTheSame(oldItem: TrackModel, newItem: TrackModel): Boolean {
             return oldItem == newItem
         }
 
-        override fun areContentsTheSame(oldItem: track, newItem: track): Boolean {
+        override fun areContentsTheSame(oldItem: TrackModel, newItem: TrackModel): Boolean {
             return oldItem.mDirect == newItem.mDirect
         }
     }
@@ -54,7 +53,7 @@ class TrackAdapter(
         pContext = _context
     }
 
-    fun bind(item: track, position: Int) {
+    fun bind(item: TrackModel, position: Int) {
 
         CoroutineScope(Default).launch{
             mmr.setDataSource(item.mDirect)
@@ -73,27 +72,29 @@ class TrackAdapter(
 }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
-
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.fragment_item, parent, false)
-
-
         return TrackViewHolder(view, parent.context)
     }
 
-    override fun getItemCount() = trackList.size
+    override fun getItemCount() = differ.currentList.size
+
+    fun submitList(list: List<TrackModel>) {
+        differ.submitList(list)
+    }
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
         holder.itemView.setOnClickListener{
-            onClickListener.clickListener(trackList[position])
-        }
-        when(holder){
-            is TrackViewHolder -> {
-                holder.bind(trackList[position], position)
-            }
-        }
+            onClickListener.clickListener(differ.currentList[position], position)}
+
+        holder.bind(differ.currentList[position], position)
     }
-    class OnClickListener(val clickListener: (_track: track) -> Unit) {
-        fun onClick(Track: track) = clickListener(Track)
+
+    class OnClickListener(val clickListener: (_trackModel: TrackModel, _position : Int) -> Unit) {
+        fun onClick(TrackModel: TrackModel, Position: Int) = clickListener(TrackModel, Position)
     }
+
 }
+
+
+

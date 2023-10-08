@@ -2,25 +2,27 @@ package com.example.mp3.data.repository
 
 import android.media.MediaMetadataRetriever
 import android.os.Environment
-import com.example.mp3.data.models.track
+import androidx.lifecycle.MutableLiveData
+import com.example.mp3.data.models.TrackModel
 import java.io.File
 
 object Repository {
 
     val mDirect: ArrayList<String> = readDirectory(Environment.getExternalStorageDirectory())
 
-    var mTracks: ArrayList<track>
+    var mTrackModels: ArrayList<TrackModel>
     /*var mAlbuns: ArrayList<album>
     var mArtists: ArrayList<artist>*/
 
     init{
-        mTracks = createTracks(mDirect)
+        mTrackModels = createTracks(mDirect)
     }
 
-    fun getTracks() = mTracks
-    fun createTracks(directs: ArrayList<String>): ArrayList<track>{
+    fun getTracks() = MutableLiveData(mTrackModels)
 
-        val newDirects = ArrayList<track>()
+    fun createTracks(directs: ArrayList<String>): ArrayList<TrackModel>{
+
+        val newDirects = ArrayList<TrackModel>()
         val mmr = MediaMetadataRetriever()
         var mmrData : ArrayList<String?>
 
@@ -40,7 +42,7 @@ object Repository {
 
             if (mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)!!.toLong() < 900000) {
                 newDirects.add(
-                    track(
+                    TrackModel(
                         file,
                         mmrData[0],
                         mmrData[1],

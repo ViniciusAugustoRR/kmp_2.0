@@ -1,53 +1,62 @@
 package com.example.mp3.view.activities
 
+import android.media.MediaMetadataRetriever
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.accessibility.AccessibilityViewCommand.SetProgressArguments
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
 import com.example.mp3.R
-import com.example.mp3.view.fragments.ItemFragment
+import com.example.mp3.databinding.ActivityMainBinding
+import com.example.mp3.logic.viewmodels.PlayerVM
+import com.example.mp3.view.fragments.TrackFragment
 import com.example.mp3.view.fragments.RunningPlayerFragment
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 
 class MainActivity : AppCompatActivity() {
-
-
-    lateinit var main_dragger : ConstraintLayout
-    lateinit var main_scrolled : ConstraintLayout
-    lateinit var main_sliderlayout : SlidingUpPanelLayout
-    lateinit var main_title_tv : TextView
+    private val mmr = MediaMetadataRetriever()
+    private lateinit var playerVM: PlayerVM
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
-        /*val fragment = ItemFragment()
-        val runningFragment = RunningPlayerFragment()*/
+        try {
+            setPanelSlideLayout()
+            playerVM = ViewModelProvider(this).get(PlayerVM::class.java)
+            playerVM._Track.observe(this, Observer { track ->
+                binding.mainRunningTitle.text = track.trackName
+                binding.mainRunningAlbum.text = track.albumName
 
-        main_scrolled = findViewById(R.id.main_scrolled)
-        main_dragger = findViewById(R.id.main_dragger)
-        main_sliderlayout = findViewById(R.id.main_sliderlayout)
-        main_title_tv = findViewById(R.id.main_runningTitle)
-        setPanelSlideLayout()
-        setAssets()
-        main_dragger.bringToFront()
+                mmr.setDataSource(track.mDirect)
+                Glide.with(this).asBitmap()
+                    .load(mmr.embeddedPicture)
+                    .into(binding.mainRunningCover)
+            })
+
+            supportFragmentManager
+                .beginTransaction()
+                .add(binding.mainFrame.id, TrackFragment())
+                .add(binding.mainRunningFrame.id, RunningPlayerFragment())
+                .commit()
+
+        } catch (e: Exception){
+            var x = e.message;
+        }
     }
 
-    private fun setAssets() {
-
-        supportFragmentManager
-            .beginTransaction()
-            .add(R.id.main_frame, ItemFragment())
-            .add(R.id.main_runningFrame, RunningPlayerFragment())
-            .commit()
-    }
     private fun setPanelSlideLayout(){
         val mSliderListener = object : SlidingUpPanelLayout.PanelSlideListener{
             override fun onPanelSlide(panel: View, slideOffset: Float) {
-                main_dragger.alpha = 1 - slideOffset
-                main_scrolled.alpha = slideOffset
+                binding.mainDragger.alpha = 1 - slideOffset
+                binding.mainScrolled.alpha = slideOffset
                 println("--------------------------------> $slideOffset")
             }
             override fun onPanelStateChanged(panel: View?, previousState: SlidingUpPanelLayout.PanelState?,
@@ -56,6 +65,8 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
-        main_sliderlayout.addPanelSlideListener(mSliderListener)
+        binding.mainSliderlayout.addPanelSlideListener(mSliderListener)
+        binding.mainDragger.bringToFront()
     }
+
 }

@@ -1,8 +1,8 @@
 package com.example.mp3.data.models
 
-class artist (
+class ArtistModel (
     val artistName: String?,
-    val albuns: ArrayList<album>
+    val albuns: ArrayList<AlbumModel>
 ){
 
 }

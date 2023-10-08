@@ -1,6 +1,6 @@
 package com.example.mp3.data.models
 
-class track
+class TrackModel
     (
     var mDirect: String?,
     val trackName: String?,

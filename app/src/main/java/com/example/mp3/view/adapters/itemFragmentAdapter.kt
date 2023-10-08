@@ -1,18 +1,15 @@
 package com.example.mp3.view.adapters
 
-import android.icu.text.CaseMap.Title
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.compose.foundation.interaction.Interaction
-import androidx.compose.ui.layout.Layout
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mp3.R
-import com.example.mp3.data.models.track
+import com.example.mp3.data.models.TrackModel
 
 class itemFragmentAdapter(
-    private val trackList: ArrayList<track>
+    private val trackModelList: ArrayList<TrackModel>
 ) : RecyclerView.Adapter<itemFragmentAdapter.TrackRecyclerVH>() {
 
     class TrackRecyclerVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -37,13 +34,13 @@ class itemFragmentAdapter(
     }
 
     override fun onBindViewHolder(holder: TrackRecyclerVH, position: Int) {
-        val currentItem = trackList[position]
+        val currentItem = trackModelList[position]
         holder.title.text = currentItem.trackName.toString()
         holder.subtitle.text = currentItem.albumName.toString()
     }
 
     override fun getItemCount(): Int {
-        return trackList.count()
+        return trackModelList.count()
     }
 
 }
