@@ -7,12 +7,15 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.mp3.R
 import com.example.mp3.databinding.ActivityMainBinding
+import com.example.mp3.logic.FragmentInstances.FragmentInstances
 import com.example.mp3.logic.viewmodels.PlayerVM
+import com.example.mp3.view.fragments.MenuFragment
 import com.example.mp3.view.fragments.TrackFragment
 import com.example.mp3.view.fragments.RunningPlayerFragment
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
@@ -43,7 +46,7 @@ class MainActivity : AppCompatActivity() {
 
             supportFragmentManager
                 .beginTransaction()
-                .add(binding.mainFrame.id, TrackFragment())
+                .add(binding.mainFrame.id, FragmentInstances.detailFrags[0])
                 .add(binding.mainRunningFrame.id, RunningPlayerFragment())
                 .commit()
 

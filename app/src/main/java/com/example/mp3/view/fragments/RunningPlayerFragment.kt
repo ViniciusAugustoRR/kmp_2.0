@@ -32,7 +32,6 @@ class RunningPlayerFragment : Fragment() {
     private lateinit var binding : FragmentRunningPlayerBinding
     private val mmr = MediaMetadataRetriever()
     lateinit var playerVM: PlayerVM
-    lateinit var testVM: TestingVM
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

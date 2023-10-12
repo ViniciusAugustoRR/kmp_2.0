@@ -1,5 +1,6 @@
 package com.example.mp3.view.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -19,7 +20,7 @@ import com.example.mp3.view.adapters.TrackAdapter
 /**
  * A fragment representing a list of Items.
  */
-class TrackFragment(private val frag_Interation : OnClickInteraction? = null): Fragment(){
+class TrackFragment(/*private val frag_Interation : OnClickInteraction? = null*/): Fragment(){
     private lateinit var trackAdapter: TrackAdapter
     private lateinit var trackVM: TrackVM
     private lateinit var playerVM: PlayerVM
@@ -29,6 +30,7 @@ class TrackFragment(private val frag_Interation : OnClickInteraction? = null): F
         playerVM = ViewModelProvider(requireActivity())[PlayerVM::class.java]
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -63,9 +65,7 @@ class TrackFragment(private val frag_Interation : OnClickInteraction? = null): F
         }
     }
 
-    interface OnClickInteraction {
-        fun onItemClicked(TrackModel: TrackModel, position: Int)
-    }
+
 
 
 
