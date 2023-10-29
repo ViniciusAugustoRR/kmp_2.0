@@ -5,6 +5,8 @@ import com.example.mp3.view.fragments.AlbumFragment
 import com.example.mp3.view.fragments.ArtistFragment
 import com.example.mp3.view.fragments.MenuFragment
 import com.example.mp3.view.fragments.TrackFragment
+import com.example.mp3.view.fragments.detailfragments.AlbumDetailFragment
+import com.example.mp3.view.fragments.detailfragments.ArtistDetailFragment
 
 object FragmentInstances {
 

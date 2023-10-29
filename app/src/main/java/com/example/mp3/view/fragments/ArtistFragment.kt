@@ -9,9 +9,12 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mp3.R
+import com.example.mp3.logic.FragmentInstances.FragmentInstances
+import com.example.mp3.logic.viewmodels.ArtistDetailVm
 import com.example.mp3.logic.viewmodels.ArtistVM
 import com.example.mp3.view.adapters.AlbumAdapter
 import com.example.mp3.view.adapters.ArtistAdapter
+import com.example.mp3.view.fragments.detailfragments.ArtistDetailFragment
 
 class ArtistFragment : Fragment() {
     private lateinit var artistAdapter: ArtistAdapter
@@ -32,9 +35,9 @@ class ArtistFragment : Fragment() {
             artistVM = ArtistVM()
             artistAdapter = ArtistAdapter(
                 ArtistAdapter.OnClickListener { artist, position ->
-                    /*parentFragmentManager.beginTransaction()
-                        .replace(R.id.main_frame, FragmentInstances.listFrags[1])
-                        .commit()*/
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.main_frame, ArtistDetailFragment(artist))
+                        .commit()
                     Toast.makeText(requireContext(), artist.artistName, Toast.LENGTH_SHORT).show()
                 })
         } catch (e: Exception){

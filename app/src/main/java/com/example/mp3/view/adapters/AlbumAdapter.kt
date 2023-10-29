@@ -20,7 +20,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class AlbumAdapter(
-    private val onClickListener: OnClickListener
+    private val onClickListener: OnClickListener, private val isArtistAlbumList: Boolean
 ) : RecyclerView.Adapter<AlbumAdapter.AlbumViewHolder>(){
 
     companion object DIFF_CALLBACK : DiffUtil.ItemCallback<AlbumModel>() {
@@ -71,8 +71,12 @@ class AlbumAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlbumViewHolder {
+        var layout = R.layout.fragment_item
+        if(isArtistAlbumList){
+            layout = R.layout.fragment_album_item_list}
+
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.fragment_item, parent, false)
+            .inflate(layout, parent, false)
 
         return AlbumViewHolder(view, parent.context)
     }
