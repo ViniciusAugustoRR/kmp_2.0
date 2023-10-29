@@ -1,33 +1,38 @@
 package com.example.mp3.view.fragments.detailfragments
 
+import android.media.MediaMetadataRetriever
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.example.mp3.R
+import com.example.mp3.data.models.ArtistModel
+import com.example.mp3.databinding.FragmentAlbumDetailBinding
+import com.example.mp3.databinding.FragmentArtistDetailBinding
+import com.example.mp3.databinding.FragmentRunningPlayerBinding
+import com.example.mp3.logic.FragmentInstances.FragmentInstances
+import com.example.mp3.logic.viewmodels.ArtistDetailVm
+import com.example.mp3.logic.viewmodels.ArtistVM
+import com.example.mp3.logic.viewmodels.PlayerVM
+import com.example.mp3.view.adapters.AlbumAdapter
+import com.example.mp3.view.adapters.ArtistAdapter
+import com.example.mp3.view.adapters.TrackAdapter
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [ArtistDetailFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class ArtistDetailFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
+class ArtistDetailFragment(private val _SelectedArtist: ArtistModel) : Fragment() {
+    private lateinit var binding : FragmentArtistDetailBinding
+    private val mmr = MediaMetadataRetriever()
+    private lateinit var playerVM: PlayerVM
+    private lateinit var trackAdapter: TrackAdapter
+    private lateinit var albumAdapter: AlbumAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+        playerVM = ViewModelProvider(requireActivity())[PlayerVM::class.java]
+        binding = FragmentArtistDetailBinding.inflate(layoutInflater)
     }
 
     override fun onCreateView(
@@ -35,26 +40,52 @@ class ArtistDetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_artist_detail, container, false)
+        //val view = inflater.inflate(R.layout.fragment_artist_detail, container, false)
+        val view = binding.root
+        try {
+            //change track and reprodlist
+            trackAdapter = TrackAdapter(TrackAdapter.OnClickListener { track, position ->
+                playerVM.setRL(_SelectedArtist.getTracks())
+                playerVM.setPos(position)
+            })
+            albumAdapter = AlbumAdapter(
+                AlbumAdapter.OnClickListener { album, position ->
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.main_frame, AlbumDetailFragment(album))
+                        .commit()
+                    Toast.makeText(requireContext(), album.albumName, Toast.LENGTH_SHORT).show()
+                }, true)
+        } catch (ex: Exception){
+            var x = ex.message
+        }
+        return view
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ArtistDetailFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ArtistDetailFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        try {
+
+            albumAdapter.submitList(_SelectedArtist.albuns)
+            binding.artistDetailAlbums.apply {
+                layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+                adapter = albumAdapter
+                setHasFixedSize(true)
             }
+            trackAdapter.submitList(_SelectedArtist.getTracks())
+            binding.artistDetailTracks.apply {
+                layoutManager = LinearLayoutManager(requireContext())
+                adapter = trackAdapter
+                setHasFixedSize(true)
+            }
+            mmr.setDataSource(_SelectedArtist.getTracks()[0].mDirect)
+            Glide.with(requireContext())
+                .asBitmap()
+                .load(mmr.embeddedPicture)
+                .into(binding.artistDetailCover)
+        } catch (ex: Exception){
+            var x = ex.message
+        }
     }
+
+
 }

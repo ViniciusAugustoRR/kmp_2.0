@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
@@ -31,13 +32,19 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
+        val callback = this.onBackPressedDispatcher.addCallback(this) {
+            if(binding.mainSliderlayout.panelState == SlidingUpPanelLayout.PanelState.EXPANDED){
+                binding.mainSliderlayout.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
+            }
+        }
+        this.onBackPressedDispatcher.addCallback(callback)
+        
         try {
             setPanelSlideLayout()
-            playerVM = ViewModelProvider(this).get(PlayerVM::class.java)
+            playerVM = ViewModelProvider(this)[PlayerVM::class.java]
             playerVM._Track.observe(this, Observer { track ->
                 binding.mainRunningTitle.text = track.trackName
                 binding.mainRunningAlbum.text = track.albumName
-
                 mmr.setDataSource(track.mDirect)
                 Glide.with(this).asBitmap()
                     .load(mmr.embeddedPicture)
@@ -60,7 +67,7 @@ class MainActivity : AppCompatActivity() {
             override fun onPanelSlide(panel: View, slideOffset: Float) {
                 binding.mainDragger.alpha = 1 - slideOffset
                 binding.mainScrolled.alpha = slideOffset
-                println("--------------------------------> $slideOffset")
+                println("---------------------------- ----> $slideOffset")
             }
             override fun onPanelStateChanged(panel: View?, previousState: SlidingUpPanelLayout.PanelState?,
                                              newState: SlidingUpPanelLayout.PanelState?) {

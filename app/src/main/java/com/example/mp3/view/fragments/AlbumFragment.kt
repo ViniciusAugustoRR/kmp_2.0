@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
@@ -15,6 +16,7 @@ import com.example.mp3.logic.FragmentInstances.FragmentInstances
 import com.example.mp3.logic.viewmodels.AlbumVM
 import com.example.mp3.view.adapters.AlbumAdapter
 import com.example.mp3.view.adapters.TrackAdapter
+import com.example.mp3.view.fragments.detailfragments.AlbumDetailFragment
 
 
 class AlbumFragment : Fragment() {
@@ -32,16 +34,23 @@ class AlbumFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+
+        val callback = requireActivity().onBackPressedDispatcher.addCallback(requireActivity()) {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.main_frame,FragmentInstances.detailFrags[0])
+                .commit()}
+        requireActivity().onBackPressedDispatcher.addCallback(callback)
+
         val view = inflater.inflate(R.layout.fragment_album, container, false)
         try {
             albumVM = AlbumVM()
             albumListAdapter = AlbumAdapter(
                 AlbumAdapter.OnClickListener { album, position ->
-                    /*parentFragmentManager.beginTransaction()
-                        .replace(R.id.main_frame, FragmentInstances.listFrags[1])
-                        .commit()*/
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.main_frame, AlbumDetailFragment(album))
+                        .commit()
                     Toast.makeText(requireContext(), album.albumName, Toast.LENGTH_SHORT).show()
-                })
+                }, false)
         } catch (e: Exception){
             var x = e.message;
         }

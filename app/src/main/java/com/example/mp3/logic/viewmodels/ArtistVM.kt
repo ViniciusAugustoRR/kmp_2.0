@@ -5,9 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import com.example.mp3.data.models.AlbumModel
 import com.example.mp3.data.models.ArtistModel
 import com.example.mp3.data.repository.Repository
+import androidx.lifecycle.ViewModel
 
-class ArtistVM {
+class ArtistVM : ViewModel() {
     private val _mArtists : MutableLiveData<ArrayList<ArtistModel>> = Repository.getArtists()
     fun getAlbums(): LiveData<ArrayList<ArtistModel>> = _mArtists
+
 
 }
